@@ -1,0 +1,28 @@
+{
+  "name": "aaronadal/validator",
+  "type": "library",
+  "license": "MIT",
+  "description": "Easy and powerful PHP validation library",
+  "authors": [
+    {
+      "name": "Aarón Nadal",
+      "email": "aaronadal.dev@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.6"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Aaronadal\\Validator\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Aaronadal\\Tests\\": "tests/"
+    }
+  }
+}
