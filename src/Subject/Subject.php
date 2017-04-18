@@ -150,6 +150,14 @@ class Subject implements SubjectInterface
     /**
      * {@inheritdoc}
      */
+    public function applyParameter($key, $default = null)
+    {
+        $this->setParameter($key, $this->getParameter($key, $default));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function putError($key, $error)
     {
         $this->errorCollector->putError($key, $error);
