@@ -47,6 +47,6 @@ class DefaultObjectDataSetter extends ObjectDataSetter
         $string = lcfirst($string);
         $regex  = '#([A-Z])#';
 
-        return preg_replace($regex, '_$1', $string);
+        return strtolower(preg_replace($regex, '_$1', $string));
     }
 }
