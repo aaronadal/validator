@@ -10,6 +10,7 @@ use Aaronadal\Validator\Exception\ParameterNotFoundException;
  */
 abstract class ObjectDataProvider implements DataProviderInterface
 {
+    use RecursiveArrayProviderTrait;
 
     private $object = null;
 
@@ -43,6 +44,10 @@ abstract class ObjectDataProvider implements DataProviderInterface
      */
     public function getParameter($key, $default = null)
     {
+        if($this->isRecursiveArrayParameter($key)) {
+            return $this->getRecursiveArrayParameter($key);
+        }
+
         // If the object is null, return the default value.
         if($this->getObject() === null) {
             return $default;
