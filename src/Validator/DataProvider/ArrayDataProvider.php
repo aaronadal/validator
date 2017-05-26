@@ -11,6 +11,7 @@ use Aaronadal\Validator\Exception\ParameterNotFoundException;
 class ArrayDataProvider implements DataProviderInterface
 {
     use RecursiveArrayProviderTrait;
+    use RecursiveObjectProviderTrait;
 
     private $array = array();
 
@@ -40,15 +41,19 @@ class ArrayDataProvider implements DataProviderInterface
      */
     public function getParameter($key, $default = null)
     {
+        if(array_key_exists($key, $this->array)) {
+            return $this->array[$key];
+        }
+
+        if($this->isRecursiveObjectParameter($key)) {
+            return $this->getRecursiveObjectParameter($key, $default);
+        }
+
         if($this->isRecursiveArrayParameter($key)) {
-            return $this->getRecursiveArrayParameter($key);
+            return $this->getRecursiveArrayParameter($key, $default);
         }
 
-        if(!array_key_exists($key, $this->array)) {
-            return $default;
-        }
-
-        return $this->array[$key];
+        return $default;
     }
 
     /**

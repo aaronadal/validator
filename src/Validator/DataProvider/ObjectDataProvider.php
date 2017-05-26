@@ -11,6 +11,7 @@ use Aaronadal\Validator\Exception\ParameterNotFoundException;
 abstract class ObjectDataProvider implements DataProviderInterface
 {
     use RecursiveArrayProviderTrait;
+    use RecursiveObjectProviderTrait;
 
     private $object = null;
 
@@ -44,10 +45,6 @@ abstract class ObjectDataProvider implements DataProviderInterface
      */
     public function getParameter($key, $default = null)
     {
-        if($this->isRecursiveArrayParameter($key)) {
-            return $this->getRecursiveArrayParameter($key);
-        }
-
         // If the object is null, return the default value.
         if($this->getObject() === null) {
             return $default;
@@ -56,17 +53,24 @@ abstract class ObjectDataProvider implements DataProviderInterface
         // Let's get the key-method mapping.
         $mapping = $this->getKeyMethodMapping();
 
-        // If the key is not mapped, return the default value.
-        if(!array_key_exists($key, $mapping)) {
-            return $default;
+        // Call the mapped getter method, if exists.
+        if(array_key_exists($key, $mapping)) {
+            $object   = $this->getObject();
+            $method   = $mapping[$key];
+            $callable = array($object, $method);
+
+            return call_user_func($callable);
         }
 
-        // Call the mapped getter method.
-        $object   = $this->getObject();
-        $method   = $mapping[$key];
-        $callable = array($object, $method);
+        if($this->isRecursiveObjectParameter($key)) {
+            return $this->getRecursiveObjectParameter($key, $default);
+        }
 
-        return call_user_func($callable);
+        if($this->isRecursiveArrayParameter($key)) {
+            return $this->getRecursiveArrayParameter($key, $default);
+        }
+
+        return $default;
     }
 
     /**

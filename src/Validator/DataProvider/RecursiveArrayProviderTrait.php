@@ -9,9 +9,9 @@ namespace Aaronadal\Validator\Validator\DataProvider;
 trait RecursiveArrayProviderTrait
 {
 
-    private function getRegex()
+    private function getRecursiveArrayRegex()
     {
-        return '/(.*?)(\[.*?\])+$/';
+        return '/(.*?)(\[.*?\])/';
     }
 
     /**
@@ -23,25 +23,27 @@ trait RecursiveArrayProviderTrait
      */
     protected function isRecursiveArrayParameter($key)
     {
-        return preg_match($this->getRegex(), $key);
+        return preg_match($this->getRecursiveArrayRegex(), $key);
     }
 
     /**
      * Converts all the [xxx] contained in the parameter key into array accesses.
      *
-     * @param $key
+     * @param      $key
+     * @param null $default
      *
      * @return mixed|null
      */
-    protected function getRecursiveArrayParameter($key)
+    protected function getRecursiveArrayParameter($key, $default = null)
     {
         $matches = array();
-        preg_match($this->getRegex(), $key, $matches);
-        
-        if(count($matches) > 2) {
-            $name = $matches[1];
+        preg_match_all($this->getRecursiveArrayRegex(), $key, $matches);
+
+        $array = null;
+        if(count($matches) === 3 && count($matches[0]) > 0) {
+            $name = $matches[1][0];
             $array = $this->getParameter($name);
-            foreach(array_slice($matches, 2) as $match) {
+            foreach($matches[2] as $match) {
                 $recursiveKey = str_replace(array('[', ']'), array('', ''), $match);
                 if((is_array($array) || $array instanceof \ArrayAccess) && array_key_exists($recursiveKey, $array)) {
                     $array = $array[$recursiveKey];
@@ -50,10 +52,8 @@ trait RecursiveArrayProviderTrait
                     $array = null;
                 }
             }
-
-            return $array;
         }
 
-        return null;
+        return $array ?: $default;
     }
 }
