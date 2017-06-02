@@ -45,7 +45,7 @@ trait RecursiveArrayProviderTrait
             $array = $this->getParameter($name);
             foreach($matches[2] as $match) {
                 $recursiveKey = str_replace(array('[', ']'), array('', ''), $match);
-                if((is_array($array) || $array instanceof \ArrayAccess) && array_key_exists($recursiveKey, $array)) {
+                if((is_array($array) || $array instanceof \ArrayAccess) && isset($array[$recursiveKey])) {
                     $array = $array[$recursiveKey];
                 }
                 else {
