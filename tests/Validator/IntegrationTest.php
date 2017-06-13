@@ -8,6 +8,7 @@ use Aaronadal\Validator\Subject\Subject;
 use Aaronadal\Validator\Validator\DataProvider\ArrayDataProvider;
 use Aaronadal\Validator\Validator\DataSetter\ArrayDataSetter;
 use Aaronadal\Validator\Validator\ErrorCollector\ArrayErrorCollector;
+use Aaronadal\Validator\Validator\ErrorCollector\DefaultErrorCollector;
 
 /**
  * @author Aarón Nadal <aaronadal.dev@gmail.com>
@@ -22,7 +23,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
         $subject->setDataProvider(new ArrayDataProvider(array('foo' => 'bar')));
         $subject->setDataSetter(new ArrayDataSetter());
-        $subject->setErrorCollector(new ArrayErrorCollector());
+        $subject->setErrorCollector(new DefaultErrorCollector());
 
         $this->assertTrue($validator->isValid($subject));
 
@@ -39,7 +40,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
         $subject->setDataProvider(new ArrayDataProvider(array('foo' => 'baz')));
         $subject->setDataSetter(new ArrayDataSetter());
-        $subject->setErrorCollector(new ArrayErrorCollector());
+        $subject->setErrorCollector(new DefaultErrorCollector());
 
         $this->assertFalse($validator->isValid($subject));
     }

@@ -19,14 +19,4 @@ interface SubjectInterface extends ValidableInterface, DataProviderInterface, Da
      */
     public function getId();
 
-    /**
-     * This method is a shortcut for the following code:
-     *
-     * <code>$subject->setParameter($key, $subject->getParameter($key, $default));</code>
-     *
-     * @param string $key     The parameter key
-     * @param mixed  $default The default value if the parameter is missing
-     */
-    public function applyParameter($key, $default = null);
-
 }

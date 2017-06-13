@@ -3,10 +3,11 @@
 namespace Aaronadal\Validator\Validator;
 
 
-use Aaronadal\Validator\Validator\DataProvider\ArrayDataProvider;
 use Aaronadal\Validator\Validator\DataProvider\DataProviderInterface;
+use Aaronadal\Validator\Validator\DataProvider\NullDataProvider;
 use Aaronadal\Validator\Validator\DataSetter\ArrayDataSetter;
-use Aaronadal\Validator\Validator\ErrorCollector\ArrayErrorCollector;
+use Aaronadal\Validator\Validator\DataSetter\DataSetterInterface;
+use Aaronadal\Validator\Validator\ErrorCollector\DefaultErrorCollector;
 use Aaronadal\Validator\Validator\ErrorCollector\ErrorCollectorInterface;
 
 /**
@@ -23,14 +24,17 @@ class Validable implements ValidableInterface
      * Creates a new Validable instance.
      *
      * @param DataProviderInterface|null   $dataProvider   If null, an empty ArrayDataProvider is used.
-     * @param ArrayDataSetter|null         $dataSetter     If null, an empty ArrayDataSetter is used.
-     * @param ErrorCollectorInterface|null $errorCollector If null, an ArrayErrorCollector is used.
+     * @param DataSetterInterface|null     $dataSetter     If null, an empty ArrayDataSetter is used.
+     * @param ErrorCollectorInterface|null $errorCollector If null, a DefaultErrorCollector is used.
      */
-    public function __construct(DataProviderInterface $dataProvider = null, ArrayDataSetter $dataSetter = null, ErrorCollectorInterface $errorCollector = null)
-    {
-        $this->dataProvider   = $dataProvider ?: new ArrayDataProvider();
+    public function __construct(
+        DataProviderInterface $dataProvider = null,
+        DataSetterInterface $dataSetter = null,
+        ErrorCollectorInterface $errorCollector = null
+    ) {
+        $this->dataProvider   = $dataProvider ?: new NullDataProvider();
         $this->dataSetter     = $dataSetter ?: new ArrayDataSetter();
-        $this->errorCollector = $errorCollector ?: new ArrayErrorCollector();
+        $this->errorCollector = $errorCollector ?: new DefaultErrorCollector();
     }
 
     /**
@@ -42,9 +46,9 @@ class Validable implements ValidableInterface
     }
 
     /**
-     * @param ArrayDataProvider $dataProvider
+     * {@inheritdoc}
      */
-    public function setDataProvider(ArrayDataProvider $dataProvider)
+    public function setDataProvider(DataProviderInterface $dataProvider)
     {
         $this->dataProvider = $dataProvider;
     }
@@ -58,9 +62,9 @@ class Validable implements ValidableInterface
     }
 
     /**
-     * @param ArrayDataSetter $dataSetter
+     * {@inheritdoc}
      */
-    public function setDataSetter(ArrayDataSetter $dataSetter)
+    public function setDataSetter(DataSetterInterface $dataSetter)
     {
         $this->dataSetter = $dataSetter;
     }
@@ -74,10 +78,29 @@ class Validable implements ValidableInterface
     }
 
     /**
-     * @param ErrorCollectorInterface $errorCollector
+     * {@inheritdoc}
      */
     public function setErrorCollector(ErrorCollectorInterface $errorCollector)
     {
         $this->errorCollector = $errorCollector;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function applyParameter($key, $default = null)
+    {
+        $value = $this->getDataProvider()->getParameter($key, $default);
+        $this->getDataSetter()->setParameter($key, $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function applyParameterOrFail($key)
+    {
+        $value = $this->getDataProvider()->getParameterOrFail($key);
+        $this->getDataSetter()->setParameter($key, $value);
+    }
+
 }

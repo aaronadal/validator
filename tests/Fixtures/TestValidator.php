@@ -20,7 +20,7 @@ class TestValidator implements ValidatorInterface
             $subject->putError('foo', 'Is not "bar"');
         }
 
-        return !$subject->hasErrors();
+        return !$subject->anyError();
     }
 
     public function apply(SubjectInterface $subject, $action = null)

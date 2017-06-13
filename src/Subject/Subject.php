@@ -7,8 +7,9 @@ use Aaronadal\Validator\Validator\DataProvider\ArrayDataProvider;
 use Aaronadal\Validator\Validator\DataProvider\DataProviderInterface;
 use Aaronadal\Validator\Validator\DataSetter\ArrayDataSetter;
 use Aaronadal\Validator\Validator\DataSetter\DataSetterInterface;
-use Aaronadal\Validator\Validator\ErrorCollector\ArrayErrorCollector;
+use Aaronadal\Validator\Validator\ErrorCollector\DefaultErrorCollector;
 use Aaronadal\Validator\Validator\ErrorCollector\ErrorCollectorInterface;
+use Aaronadal\Validator\Validator\ErrorCollector\MessageBagInterface;
 
 /**
  * @author Aarón Nadal <aaronadal.dev@gmail.com>
@@ -39,14 +40,21 @@ class Subject implements SubjectInterface
     /**
      * Creates a new Subject instance.
      *
-     * @param string $id The unique ID of the new subject.
+     * @param string                       $id             The unique ID of the subject.
+     * @param DataProviderInterface|null   $dataProvider   The data provider.
+     * @param DataSetterInterface|null     $dataSetter     The data setter.
+     * @param ErrorCollectorInterface|null $errorCollector The error collector.
      */
-    public function __construct($id)
-    {
+    public function __construct(
+        $id,
+        DataProviderInterface $dataProvider = null,
+        DataSetterInterface $dataSetter = null,
+        ErrorCollectorInterface $errorCollector = null
+    ) {
         $this->id             = $id;
-        $this->dataProvider   = new ArrayDataProvider();
-        $this->dataSetter     = new ArrayDataSetter();
-        $this->errorCollector = new ArrayErrorCollector();
+        $this->dataProvider   = $dataProvider ?: new ArrayDataProvider();
+        $this->dataSetter     = $dataSetter ?: new ArrayDataSetter();
+        $this->errorCollector = $errorCollector ?: new DefaultErrorCollector();
     }
 
     /**
@@ -70,7 +78,7 @@ class Subject implements SubjectInterface
      */
     public function setDataProvider(DataProviderInterface $dataProvider)
     {
-        // If the data provider is a Subject, its inner data provider is used to avoid circular references.
+        // If data provider is a Subject, its inner data provider is used to avoid circular references.
         if($dataProvider instanceof Subject) {
             $dataProvider = $dataProvider->getDataProvider();
         }
@@ -91,20 +99,12 @@ class Subject implements SubjectInterface
      */
     public function setDataSetter(DataSetterInterface $dataSetter)
     {
-        // If the data setter is a Subject, its inner data setter is used to avoid circular references.
+        // If data setter is a Subject, its inner data setter is used to avoid circular references.
         if($dataSetter instanceof Subject) {
             $dataSetter = $dataSetter->getDataSetter();
         }
 
         $this->dataSetter = $dataSetter;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getSubject()
-    {
-        return $this;
     }
 
     /**
@@ -158,6 +158,14 @@ class Subject implements SubjectInterface
     /**
      * {@inheritdoc}
      */
+    public function applyParameterOrFail($key)
+    {
+        $this->setParameter($key, $this->getParameterOrFail($key));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function putError($key, $error)
     {
         $this->errorCollector->putError($key, $error);
@@ -182,6 +190,14 @@ class Subject implements SubjectInterface
     /**
      * {@inheritdoc}
      */
+    public function setErrors($errors = [])
+    {
+        $this->errorCollector->setErrors($errors);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function hasError($key, $strict = true)
     {
         return $this->errorCollector->hasError($key, $strict);
@@ -190,8 +206,56 @@ class Subject implements SubjectInterface
     /**
      * {@inheritdoc}
      */
-    public function hasErrors($strict = true)
+    public function anyError($strict = true)
     {
-        return $this->errorCollector->hasErrors($strict);
+        return $this->errorCollector->anyError($strict);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function putWarning($key, $warning)
+    {
+        $this->errorCollector->putWarning($key, $warning);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWarning($key)
+    {
+        return $this->errorCollector->getWarning($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function allWarnings()
+    {
+        return $this->errorCollector->allWarnings();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setWarnings($warnings = [])
+    {
+        $this->errorCollector->setWarnings($warnings);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasWarning($key, $strict = true)
+    {
+        return $this->errorCollector->hasWarning($key, $strict);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function anyWarning($strict = true)
+    {
+        return $this->errorCollector->anyWarning($strict);
     }
 }

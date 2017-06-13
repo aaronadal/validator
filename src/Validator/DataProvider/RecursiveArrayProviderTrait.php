@@ -29,8 +29,8 @@ trait RecursiveArrayProviderTrait
     /**
      * Converts all the [xxx] contained in the parameter key into array accesses.
      *
-     * @param      $key
-     * @param null $default
+     * @param string $key
+     * @param null   $default
      *
      * @return mixed|null
      */
