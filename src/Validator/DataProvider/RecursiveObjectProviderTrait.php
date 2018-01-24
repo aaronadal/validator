@@ -44,14 +44,21 @@ trait RecursiveObjectProviderTrait
                     $property   = $this->underscoreToCamelCase($recursiveKey);
                     $getter     = 'get' . $this->underscoreToCamelCase($recursiveKey, true);
                     $isser      = 'is' . $this->underscoreToCamelCase($recursiveKey, true);
+                    $hasser     = 'has' . $this->underscoreToCamelCase($recursiveKey, true);
                     if($this->hasPublicProperty($reflection, $property)) {
                         $obj = $obj->$property;
+                    }
+                    else if($this->hasPublicMethod($reflection, $property)) {
+                        $obj = $obj->$property();
                     }
                     else if($this->hasPublicMethod($reflection, $getter)) {
                         $obj = $obj->$getter();
                     }
                     else if($this->hasPublicMethod($reflection, $isser)) {
                         $obj = $obj->$isser();
+                    }
+                    else if($this->hasPublicMethod($reflection, $hasser)) {
+                        $obj = $obj->$hasser();
                     }
                     else {
                         $obj = null;
