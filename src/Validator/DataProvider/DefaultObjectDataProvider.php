@@ -45,6 +45,8 @@ class DefaultObjectDataProvider extends ObjectDataProvider
             if($key !== null && $value !== null) {
                 $mapping[$key] = $value;
             }
+
+            $mapping[$this->camelCaseToUnderscore($method->getName())] = $method->getName();
         }
 
         return $mapping;
