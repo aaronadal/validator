@@ -76,6 +76,14 @@ class Subject implements SubjectInterface
     /**
      * {@inheritdoc}
      */
+    public function isValid($strict = true)
+    {
+        return !$this->anyError($strict);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getDataProvider()
     {
         return $this->dataProvider;
@@ -145,6 +153,14 @@ class Subject implements SubjectInterface
     public function getParameterOrFail($key)
     {
         return $this->dataProvider->getParameterOrFail($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function allParameters()
+    {
+        return $this->dataProvider->allParameters();
     }
 
     /**

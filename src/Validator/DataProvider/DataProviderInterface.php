@@ -36,4 +36,11 @@ interface DataProviderInterface
      */
     public function getParameterOrFail($key);
 
+    /**
+     * Retrieves all parameters from this provider.
+     *
+     * @return array The parameter collection
+     */
+    public function allParameters();
+
 }

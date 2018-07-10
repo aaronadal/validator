@@ -10,6 +10,7 @@ use Aaronadal\Validator\Exception\ParameterNotFoundException;
  */
 abstract class ObjectDataProvider implements DataProviderInterface
 {
+
     use RecursiveArrayProviderTrait;
     use RecursiveObjectProviderTrait;
 
@@ -57,7 +58,7 @@ abstract class ObjectDataProvider implements DataProviderInterface
         if(array_key_exists($key, $mapping)) {
             $object   = $this->getObject();
             $method   = $mapping[$key];
-            $callable = array($object, $method);
+            $callable = [$object, $method];
 
             return call_user_func($callable);
         }
@@ -84,6 +85,22 @@ abstract class ObjectDataProvider implements DataProviderInterface
         }
 
         return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function allParameters()
+    {
+        $parameters = [];
+        $object     = $this->getObject();
+
+        foreach($this->getKeyMethodMapping() as $key => $method) {
+            $callable         = [$object, $method];
+            $parameters[$key] = call_user_func($callable);
+        }
+
+        return $parameters;
     }
 
     /**

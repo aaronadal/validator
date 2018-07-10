@@ -27,4 +27,11 @@ class NullDataProvider implements DataProviderInterface
         throw new ParameterNotFoundException('NullDataProvider always throws an exception here.');
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function allParameters()
+    {
+        return [];
+    }
 }

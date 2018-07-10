@@ -10,12 +10,13 @@ use Aaronadal\Validator\Exception\ParameterNotFoundException;
  */
 class ArrayDataProvider implements DataProviderInterface
 {
+
     use RecursiveArrayProviderTrait;
     use RecursiveObjectProviderTrait;
 
-    private $array = array();
+    private $array = [];
 
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         $this->array = $data;
     }
@@ -67,5 +68,13 @@ class ArrayDataProvider implements DataProviderInterface
         }
 
         return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function allParameters()
+    {
+        return $this->array;
     }
 }

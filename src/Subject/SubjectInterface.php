@@ -20,6 +20,13 @@ interface SubjectInterface extends ValidableInterface, DataProviderInterface, Da
     public function getId();
 
     /**
+     * @param bool $strict If the check has to treat falsy values as non-error values
+     *
+     * @return bool true if the subject is valid (has not errors); false otherwise.
+     */
+    public function isValid($strict = true);
+
+    /**
      * Adds a piece of extra data to this subject.
      *
      * @param string $key
