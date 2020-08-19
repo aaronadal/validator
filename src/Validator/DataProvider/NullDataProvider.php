@@ -22,9 +22,25 @@ class NullDataProvider implements DataProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function getParameterArray($key, $default = [])
+    {
+        return $this->getParameterArray($key, $default);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getParameterOrFail($key)
     {
         throw new ParameterNotFoundException('NullDataProvider always throws an exception here.');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameterArrayOrFail($key)
+    {
+        return $this->getParameterOrFail($key);
     }
 
     /**

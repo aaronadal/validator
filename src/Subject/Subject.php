@@ -150,9 +150,25 @@ class Subject implements SubjectInterface
     /**
      * {@inheritdoc}
      */
+    public function getParameterArray($key, $default = [])
+    {
+        return $this->dataProvider->getParameterArray($key, $default);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getParameterOrFail($key)
     {
         return $this->dataProvider->getParameterOrFail($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameterArrayOrFail($key)
+    {
+        return $this->dataProvider->getParameterArrayOrFail($key);
     }
 
     /**

@@ -77,6 +77,14 @@ abstract class ObjectDataProvider implements DataProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function getParameterArray($key, $default = [])
+    {
+        $this->getParameter($key, $default);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getParameterOrFail($key)
     {
         $value = $this->getParameter($key, null);
@@ -85,6 +93,14 @@ abstract class ObjectDataProvider implements DataProviderInterface
         }
 
         return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameterArrayOrFail($key)
+    {
+        return $this->getParameterOrFail($key);
     }
 
     /**

@@ -60,6 +60,14 @@ class ArrayDataProvider implements DataProviderInterface
     /**
      * {@inheritdoc}
      */
+    public function getParameterArray($key, $default = [])
+    {
+        return $this->getParameter($key, $default);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getParameterOrFail($key)
     {
         $value = $this->getParameter($key, null);
@@ -68,6 +76,14 @@ class ArrayDataProvider implements DataProviderInterface
         }
 
         return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameterArrayOrFail($key)
+    {
+        $this->getParameterOrFail($key);
     }
 
     /**
