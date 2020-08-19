@@ -79,7 +79,12 @@ abstract class ObjectDataProvider implements DataProviderInterface
      */
     public function getParameterArray($key, $default = [])
     {
-        $this->getParameter($key, $default);
+        $result = $this->getParameter($key, $default);
+        if($result === null) {
+            return $default;
+        }
+
+        return $result;
     }
 
     /**
